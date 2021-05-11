@@ -27,42 +27,59 @@ class Display:
         pygame.init()
         self.surface = pygame.display.set_mode(SCREENSIZE)
 
-    def draw(self, model):
+    def draw(self, objects, world_size):
         # Background colour
         self.surface.fill(GREY)
 
         # World object grid
-        self._drawSquareGrid(WORLD_GRID_ORIGIN, model.shape[0]) # TODO should only pass the relevant data
-        self._placeCells(WORLD_GRID_ORIGIN, model) # TODO will call this for each object, need to test replacement based on "depth" of the passed object
+        self._drawSquareGrid(WORLD_GRID_ORIGIN, world_size)
+        self._drawObjects(WORLD_GRID_ORIGIN, objects, world_size) # TODO will call this for each object, need to test replacement based on "depth" of the passed object
 
         # CANN visualisation
-        self._drawSquareGrid(CANN_GRID_ORIGIN, model.shape[0]) # TODO should only pass the relevant data
+        self._drawSquareGrid(CANN_GRID_ORIGIN, world_size) 
+        # TODO need an input for the CANN data
 
         pygame.display.update()
 
-    # NEW METHOD FOR ADDING CELLS :
-    def _placeCells(self, grid_origin, grid_data):
-        # GET CELL DIMENSIONS...
-        grid_width = grid_data.shape[0] # square grid only
+    def _drawObjects(self, grid_origin, objects, world_size):
         
-        cellBorder = 6
-        celldimX = celldimY = (GRID_WH / grid_width) - (cellBorder*2)
-        # DOUBLE LOOP
-        for row in range(grid_width):
-            for column in range(grid_width):
+        cellBorder = 0
+        celldimX = celldimY = (GRID_WH / world_size) - (cellBorder*2)
+
+        for row in range(world_size):
+            for column in range(world_size):
+
+                # find the foremost object in this cell
+                is_occupied = False
+                min_depth = world_size
+                min_depth_obj_colour = None
+
+                for obj in objects:
+                    if obj.world_pose[row][column] == 1: # object occupies this space
+
+                        if obj.depth < min_depth: # if this is closer than previously found objects
+                            
+                            # there is at least one object
+                            is_occupied = True
+
+                            # set new min depth object
+                            min_depth = obj.depth
+                            min_depth_obj_colour = obj.colour
+          
                 # Is the grid cell tiled ?
-                if(grid_data[column][row] == 1): # TODO update
+                if is_occupied: # TODO update
+
                     self._drawSquareCell(
                         grid_origin[0] + (celldimY*row)
                         + cellBorder + (2*row*cellBorder) + LINE_WIDTH/2,
                         grid_origin[1] + (celldimX*column)
                         + cellBorder + (2*column*cellBorder) + LINE_WIDTH/2,
-                        celldimX, celldimY)
+                        celldimX, celldimY, min_depth_obj_colour)
 
     # Draw filled rectangle at coordinates
-    def _drawSquareCell(self, x, y, dimX, dimY):
+    def _drawSquareCell(self, x, y, dimX, dimY, colour):
         pygame.draw.rect(
-        self.surface, BLACK,
+        self.surface, colour,
         (x, y, dimX, dimY)
         )
 
@@ -108,14 +125,3 @@ class Display:
             self.surface, BLACK,
             (cont_x, cont_y + (cellSize*x)),
             (cont_x + GRID_WH, cont_y + (cellSize*x)), 2)
-
-def main():
-    # for testing the display only
-    # Test grid
-    cellMAP = np.random.randint(2, size=(10, 10))
-    d = Display()
-    while True:
-        d.draw(cellMAP)
-
-if __name__ == '__main__':
-    main()
