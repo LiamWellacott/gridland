@@ -1,32 +1,52 @@
 # manual test to check the display is working correctly (inspection)
 from gridland.world.display import Display
+from gridland.world.loader import load
+from gridland.world.entity import Colour
 
 import numpy as np
 
 def manyBox(): # test colour gradient on distance
     world_size = 10
-    objects = [ Box([i, i, i], world_size, Colour.RED, 2) for i in range(world_size) ]
-    d = Display()
-
-    while True:
-        d.draw(objects, world_size)
+    objects = []
+    for i in range(world_size):
+        objects.append({
+            'box' : {
+                'position' : [i, i, i],
+                'colour' : Colour.RED.value,
+                'size' : 2
+            }
+        })
+    params = {
+        'world_size' : 10,
+        'objects' : objects
+    }
+    run(params)
 
 def oneBox(): # test object spawn
     world_size = 10
-    b = Box([0, 0, 0], world_size, Colour.RED, 2)
+    objects = []
+    objects.append({
+        'box' : {
+            'position' : [0, 0, 0],
+            'colour' : Colour.RED.value,
+            'size' : 2
+        }
+    })
+    params = {
+        'world_size' : 10,
+        'objects' : objects
+    }
+    run(params)
+
+def run(params):
     d = Display()
+    w = load(params)
 
     while True:
-        d.draw([b], world_size)
-
-def basic():
-    # for testing the display only
-    # Test grid
-    cellMAP = np.random.randint(2, size=(10, 10))
-    d = Display()
-    while True:
-        d.draw(cellMAP)
+        
+        d.draw(w)
 
 if __name__ == '__main__':
     # change this to change test case
-    basic()
+    #oneBox()
+    manyBox()

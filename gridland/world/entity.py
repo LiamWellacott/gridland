@@ -23,22 +23,27 @@ Not object to conflict with use of the term in programming, but entitiy is an ob
 
 '''
 
-    def __init__(self, world_origin, world_hw, colour):
+    def __init__(self, params, world_hw):
 
+        self.origin = params['position']
+        colour = params['colour']
+        
         # occupancy grid for the world size, must be filled by specific object
         self.world_pose = np.zeros((world_hw, world_hw) )
-        self.origin = world_origin
         self.world_hw = world_hw
-        self.depth = world_origin[2] # TODO use 3D pose for this and get z value
 
         # convert colour to RGB   
-        v = 1.0 - ((self.depth / world_hw))# between 1.0 and 0.5 depending on depth, closer things are brighter
-        r, g, b = colorsys.hsv_to_rgb(colour.value, 1.0, v)
+        v = 1.0 - ((self.getDepth() / world_hw))# between 1.0 and 0.5 depending on depth, closer things are brighter
+        r, g, b = colorsys.hsv_to_rgb(colour, 1.0, v)
         r = self._rebaseColour(r)
         g = self._rebaseColour(g)
         b = self._rebaseColour(b)
 
         self.colour = (r, g, b)
+
+
+    def getDepth(self):
+        return self.origin[2]
 
     def update(self):
         NotImplementedError()
@@ -51,23 +56,3 @@ Not object to conflict with use of the term in programming, but entitiy is an ob
     def _rebaseColour(self, c):
         return int(c * 255)
 
-class Box(Entity):
-
-    def __init__(self, world_origin, world_hw, colour, size):
-        super().__init__(world_origin, world_hw, colour)
-
-        # TODO update depending on how I send this infot
-        origin_x = self.origin[0]
-        origin_y = self.origin[1]
-
-        # a square of size starting at origin 
-        for row in range(size):
-            for column in range(size):
-                x = origin_x + row
-                y = origin_y + column
-                if self._inWorld(x, y):
-                    self.world_pose[x][y] = 1
-                
-    def update(self):
-        # static object
-        return

@@ -1,0 +1,12 @@
+{
+    "world_size" : 10,
+    "objects" : [
+        {
+            "box" : {
+                "position" : [4, 4, 4],
+                "colour" : "BLUE",
+                "size" :  4
+            }
+        }
+    ]
+}

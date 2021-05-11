@@ -27,16 +27,16 @@ class Display:
         pygame.init()
         self.surface = pygame.display.set_mode(SCREENSIZE)
 
-    def draw(self, objects, world_size):
+    def draw(self, world):
         # Background colour
         self.surface.fill(GREY)
 
         # World object grid
-        self._drawSquareGrid(WORLD_GRID_ORIGIN, world_size)
-        self._drawObjects(WORLD_GRID_ORIGIN, objects, world_size) # TODO will call this for each object, need to test replacement based on "depth" of the passed object
+        self._drawSquareGrid(WORLD_GRID_ORIGIN, world.size)
+        self._drawObjects(WORLD_GRID_ORIGIN, world.objects, world.size) # TODO will call this for each object, need to test replacement based on "depth" of the passed object
 
         # CANN visualisation
-        self._drawSquareGrid(CANN_GRID_ORIGIN, world_size) 
+        self._drawSquareGrid(CANN_GRID_ORIGIN, world.size) 
         # TODO need an input for the CANN data
 
         pygame.display.update()
@@ -57,13 +57,13 @@ class Display:
                 for obj in objects:
                     if obj.world_pose[row][column] == 1: # object occupies this space
 
-                        if obj.depth < min_depth: # if this is closer than previously found objects
+                        if obj.getDepth() < min_depth: # if this is closer than previously found objects
                             
                             # there is at least one object
                             is_occupied = True
 
                             # set new min depth object
-                            min_depth = obj.depth
+                            min_depth = obj.getDepth()
                             min_depth_obj_colour = obj.colour
           
                 # Is the grid cell tiled ?
