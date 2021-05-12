@@ -1,9 +1,11 @@
 from gridland.world.objects.box import Box
+from gridland.world.objects.glider import Glider
 
 from gridland.world.entity import Colour
 
 _OBJECTS = {
-    "box" : Box
+    "box" : Box,
+    "glider" : Glider
 }
 
 _COLOURS = {

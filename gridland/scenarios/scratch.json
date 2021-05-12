@@ -1,0 +1,19 @@
+{
+    "world_size" : 30,
+    "objects" : [
+        {
+            "box" : {
+                "position" : [15, 15, 0],
+                "colour" : "BLUE",
+                "size" :  10
+            }
+        },
+        {
+            "glider" : {
+                "position" : [3, 3, 5],
+                "colour" : "RED",
+                "delay" : 10
+            }
+        }
+    ]
+}

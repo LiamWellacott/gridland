@@ -41,7 +41,6 @@ Not object to conflict with use of the term in programming, but entitiy is an ob
 
         self.colour = (r, g, b)
 
-
     def getDepth(self):
         return self.origin[2]
 

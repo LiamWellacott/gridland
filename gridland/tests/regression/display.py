@@ -6,7 +6,7 @@ from gridland.world.entity import Colour
 import numpy as np
 
 def manyBox(): # test colour gradient on distance
-    world_size = 10
+    world_size = 100
     objects = []
     for i in range(world_size):
         objects.append({
@@ -17,7 +17,7 @@ def manyBox(): # test colour gradient on distance
             }
         })
     params = {
-        'world_size' : 10,
+        'world_size' : world_size,
         'objects' : objects
     }
     run(params)
@@ -33,7 +33,7 @@ def oneBox(): # test object spawn
         }
     })
     params = {
-        'world_size' : 10,
+        'world_size' : world_size,
         'objects' : objects
     }
     run(params)
